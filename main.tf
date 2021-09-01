@@ -67,7 +67,7 @@ resource "azurerm_monitor_autoscale_setting" "uk-auto-scale-set" {
   target_resource_id  = "/subscriptions/e6871d0a-eca0-46ac-9e9e-beba5e910746/resourceGroups/scale-set-resources/providers/Microsoft.Compute/virtualMachineScaleSets/uk-vmss"
 
   profile {
-    name = "defaultProfile"
+    name = "uphours"
 
     capacity {
       default = 1
@@ -79,9 +79,9 @@ resource "azurerm_monitor_autoscale_setting" "uk-auto-scale-set" {
       metric_trigger {
         metric_name        = "Percentage CPU"
         metric_resource_id = "/subscriptions/e6871d0a-eca0-46ac-9e9e-beba5e910746/resourceGroups/scale-set-resources/providers/Microsoft.Compute/virtualMachineScaleSets/uk-vmss"
-        time_grain         = "PT9M"
+        time_grain         = "PT1M"
         statistic          = "Average"
-        time_window        = "PT17M"
+        time_window        = "PT5M"
         time_aggregation   = "Average"
         operator           = "GreaterThan"
         threshold          = 75
@@ -120,10 +120,50 @@ resource "azurerm_monitor_autoscale_setting" "uk-auto-scale-set" {
         cooldown  = "PT1M"
       }
     }
+    recurrence {
+      timezone = "Pacific Standard Time"
+      days    = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+      hours      = [9]
+      minutes = [0]
+    }
   }
+  profile {
+    name = "downhours"
 
- 
+    capacity {
+      default = 0
+      minimum = 0
+      maximum = 0
+    }
+
+    rule {
+      metric_trigger {
+        metric_name        = "Percentage CPU"
+        metric_resource_id = "/subscriptions/e6871d0a-eca0-46ac-9e9e-beba5e910746/resourceGroups/scale-set-resources/providers/Microsoft.Compute/virtualMachineScaleSets/uk-vmss"
+        time_grain         = "PT1M"
+        statistic          = "Average"
+        time_window        = "PT5M"
+        time_aggregation   = "Average"
+        operator           = "LessThan"
+        threshold          = 25
+      }
+
+      scale_action {
+        direction = "Decrease"
+        type      = "ChangeCount"
+        value     = "1"
+        cooldown  = "PT1M"
+      }
+    }
+    recurrence {
+      timezone = "Pacific Standard Time"
+      days    = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+      hours      = [17]
+      minutes = [0]
+    }
+  }
 }
+
 
 resource "azurerm_virtual_network" "france" {
   name                = "france-network"
@@ -185,22 +225,22 @@ resource "azurerm_monitor_autoscale_setting" "france-auto-scale-set" {
   location            = azurerm_virtual_network.france.location
   target_resource_id  = "/subscriptions/e6871d0a-eca0-46ac-9e9e-beba5e910746/resourceGroups/scale-set-resources/providers/Microsoft.Compute/virtualMachineScaleSets/france-vmss"
 
-  profile {
-    name = "defaultProfile"
+   profile {
+    name = "uphours"
 
     capacity {
       default = 1
       minimum = 1
-      maximum = 10
+      maximum = 3
     }
 
     rule {
       metric_trigger {
         metric_name        = "Percentage CPU"
-        metric_resource_id = "/subscriptions/e6871d0a-eca0-46ac-9e9e-beba5e910746/resourceGroups/scale-set-resources/providers/Microsoft.Compute/virtualMachineScaleSets/france-vmss"
-        time_grain         = "PT10M"
+        metric_resource_id = "/subscriptions/e6871d0a-eca0-46ac-9e9e-beba5e910746/resourceGroups/scale-set-resources/providers/Microsoft.Compute/virtualMachineScaleSets/uk-vmss"
+        time_grain         = "PT1M"
         statistic          = "Average"
-        time_window        = "PT15M"
+        time_window        = "PT5M"
         time_aggregation   = "Average"
         operator           = "GreaterThan"
         threshold          = 75
@@ -239,11 +279,49 @@ resource "azurerm_monitor_autoscale_setting" "france-auto-scale-set" {
         cooldown  = "PT1M"
       }
     }
+    recurrence {
+      timezone = "GMT Standard Time"
+      days    = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+      hours      = [10]
+      minutes = [0]
+    }
   }
+  profile {
+    name = "downhours"
 
- 
+    capacity {
+      default = 0
+      minimum = 0
+      maximum = 0
+    }
+
+    rule {
+      metric_trigger {
+        metric_name        = "Percentage CPU"
+        metric_resource_id = "/subscriptions/e6871d0a-eca0-46ac-9e9e-beba5e910746/resourceGroups/scale-set-resources/providers/Microsoft.Compute/virtualMachineScaleSets/france-vmss"
+        time_grain         = "PT1M"
+        statistic          = "Average"
+        time_window        = "PT5M"
+        time_aggregation   = "Average"
+        operator           = "LessThan"
+        threshold          = 25
+      }
+
+      scale_action {
+        direction = "Decrease"
+        type      = "ChangeCount"
+        value     = "1"
+        cooldown  = "PT1M"
+      }
+    }
+    recurrence {
+      timezone = "GMT Standard Time"
+      days    = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+      hours      = [15] 
+      minutes = [0]
+    }
+  }
 }
-
 
 
 resource "azurerm_virtual_network" "india" {
@@ -306,8 +384,8 @@ resource "azurerm_monitor_autoscale_setting" "india-auto-scale-set" {
   location            = azurerm_virtual_network.india.location
   target_resource_id  = "/subscriptions/e6871d0a-eca0-46ac-9e9e-beba5e910746/resourceGroups/scale-set-resources/providers/Microsoft.Compute/virtualMachineScaleSets/india-vmss"
 
-  profile {
-    name = "defaultProfile"
+   profile {
+    name = "uphours"
 
     capacity {
       default = 1
@@ -319,14 +397,13 @@ resource "azurerm_monitor_autoscale_setting" "india-auto-scale-set" {
       metric_trigger {
         metric_name        = "Percentage CPU"
         metric_resource_id = "/subscriptions/e6871d0a-eca0-46ac-9e9e-beba5e910746/resourceGroups/scale-set-resources/providers/Microsoft.Compute/virtualMachineScaleSets/india-vmss"
-        time_grain         = "PT2M"
+        time_grain         = "PT1M"
         statistic          = "Average"
-        time_window        = "PT22M"
+        time_window        = "PT5M"
         time_aggregation   = "Average"
         operator           = "GreaterThan"
         threshold          = 75
         metric_namespace   = "microsoft.compute/virtualmachinescalesets"
-
         dimensions {
           name     = "AppName"
           operator = "Equals"
@@ -337,15 +414,15 @@ resource "azurerm_monitor_autoscale_setting" "india-auto-scale-set" {
       scale_action {
         direction = "Increase"
         type      = "ChangeCount"
-        value     = "2"
-        cooldown  = "PT2M"
+        value     = "1"
+        cooldown  = "PT1M"
       }
     }
 
     rule {
       metric_trigger {
         metric_name        = "Percentage CPU"
-        metric_resource_id = "/subscriptions/e6871d0a-eca0-46ac-9e9e-beba5e910746/resourceGroups/scale-set-resources/providers/Microsoft.Compute/virtualMachineScaleSets/india-vmss"
+        metric_resource_id = "/subscriptions/e6871d0a-eca0-46ac-9e9e-beba5e910746/resourceGroups/scale-set-resources/providers/Microsoft.Compute/virtualMachineScaleSets/uk-vmss"
         time_grain         = "PT1M"
         statistic          = "Average"
         time_window        = "PT5M"
@@ -361,5 +438,47 @@ resource "azurerm_monitor_autoscale_setting" "india-auto-scale-set" {
         cooldown  = "PT1M"
       }
     }
+    recurrence {
+      timezone = "India Standard Time"
+      days    = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+      hours      = [2]
+      minutes = [30]
+    }
+  }
+  profile {
+    name = "downhours"
+
+    capacity {
+      default = 0
+      minimum = 0
+      maximum = 0
+    }
+
+    rule {
+      metric_trigger {
+        metric_name        = "Percentage CPU"
+        metric_resource_id = "/subscriptions/e6871d0a-eca0-46ac-9e9e-beba5e910746/resourceGroups/scale-set-resources/providers/Microsoft.Compute/virtualMachineScaleSets/uk-vmss"
+        time_grain         = "PT1M"
+        statistic          = "Average"
+        time_window        = "PT5M"
+        time_aggregation   = "Average"
+        operator           = "LessThan"
+        threshold          = 25
+      }
+
+      scale_action {
+        direction = "Decrease"
+        type      = "ChangeCount"
+        value     = "1"
+        cooldown  = "PT1M"
+      }
+    }
+    recurrence {
+      timezone = "Pacific Standard Time"
+      days    = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+      hours      = [22]
+      minutes = [30]
+    }
   }
 }
+  

@@ -21,7 +21,7 @@ resource "azurerm_subnet" "internal-uk" {
   address_prefixes     = ["10.0.2.0/24"]
 }
 
-resource "azurerm_linux_virtual_machine_scale_set" "uk-vmss" {
+resource "azurerm_linux_virtual_machine_scale_set" "uk_vmss" {
   name                = "uk-vmss"
   resource_group_name = azurerm_resource_group.example.name
   location            = azurerm_virtual_network.uk.location
@@ -64,7 +64,7 @@ resource "azurerm_monitor_autoscale_setting" "uk-auto-scale-set" {
   name                = "uk-auto-scale-set"
   resource_group_name = azurerm_resource_group.example.name
   location            = azurerm_virtual_network.uk.location
-  target_resource_id  = "/subscriptions/e6871d0a-eca0-46ac-9e9e-beba5e910746/resourceGroups/scale-set-resources/providers/Microsoft.Compute/virtualMachineScaleSets/uk-vmss"
+  target_resource_id  = azurerm_linux_virtual_machine_scale_set.uk_vmss.id
 
   profile {
     name = "uphours"
@@ -78,7 +78,7 @@ resource "azurerm_monitor_autoscale_setting" "uk-auto-scale-set" {
     rule {
       metric_trigger {
         metric_name        = "Percentage CPU"
-        metric_resource_id = "/subscriptions/e6871d0a-eca0-46ac-9e9e-beba5e910746/resourceGroups/scale-set-resources/providers/Microsoft.Compute/virtualMachineScaleSets/uk-vmss"
+        metric_resource_id = azurerm_linux_virtual_machine_scale_set.uk_vmss.id
         time_grain         = "PT1M"
         statistic          = "Average"
         time_window        = "PT5M"
@@ -104,7 +104,7 @@ resource "azurerm_monitor_autoscale_setting" "uk-auto-scale-set" {
     rule {
       metric_trigger {
         metric_name        = "Percentage CPU"
-        metric_resource_id = "/subscriptions/e6871d0a-eca0-46ac-9e9e-beba5e910746/resourceGroups/scale-set-resources/providers/Microsoft.Compute/virtualMachineScaleSets/uk-vmss"
+        metric_resource_id = azurerm_linux_virtual_machine_scale_set.uk_vmss.id
         time_grain         = "PT1M"
         statistic          = "Average"
         time_window        = "PT5M"
@@ -139,7 +139,7 @@ resource "azurerm_monitor_autoscale_setting" "uk-auto-scale-set" {
     rule {
       metric_trigger {
         metric_name        = "Percentage CPU"
-        metric_resource_id = "/subscriptions/e6871d0a-eca0-46ac-9e9e-beba5e910746/resourceGroups/scale-set-resources/providers/Microsoft.Compute/virtualMachineScaleSets/uk-vmss"
+        metric_resource_id = azurerm_linux_virtual_machine_scale_set.uk_vmss.id
         time_grain         = "PT1M"
         statistic          = "Average"
         time_window        = "PT5M"
@@ -179,7 +179,7 @@ resource "azurerm_subnet" "internal-france" {
   address_prefixes     = ["10.0.2.0/24"]
 }
 
-resource "azurerm_linux_virtual_machine_scale_set" "france-vmss" {
+resource "azurerm_linux_virtual_machine_scale_set" "france_vmss" {
   name                = "france-vmss"
   resource_group_name = azurerm_resource_group.example.name
   location            = azurerm_virtual_network.france.location
@@ -223,7 +223,7 @@ resource "azurerm_monitor_autoscale_setting" "france-auto-scale-set" {
   name                = "france-auto-scale-set"
   resource_group_name = azurerm_resource_group.example.name
   location            = azurerm_virtual_network.france.location
-  target_resource_id  = "/subscriptions/e6871d0a-eca0-46ac-9e9e-beba5e910746/resourceGroups/scale-set-resources/providers/Microsoft.Compute/virtualMachineScaleSets/france-vmss"
+  target_resource_id  = azurerm_linux_virtual_machine_scale_set.france_vmss.id
 
    profile {
     name = "uphours"
@@ -237,7 +237,7 @@ resource "azurerm_monitor_autoscale_setting" "france-auto-scale-set" {
     rule {
       metric_trigger {
         metric_name        = "Percentage CPU"
-        metric_resource_id = "/subscriptions/e6871d0a-eca0-46ac-9e9e-beba5e910746/resourceGroups/scale-set-resources/providers/Microsoft.Compute/virtualMachineScaleSets/uk-vmss"
+        metric_resource_id = azurerm_linux_virtual_machine_scale_set.france_vmss.id
         time_grain         = "PT1M"
         statistic          = "Average"
         time_window        = "PT5M"
@@ -263,7 +263,7 @@ resource "azurerm_monitor_autoscale_setting" "france-auto-scale-set" {
     rule {
       metric_trigger {
         metric_name        = "Percentage CPU"
-        metric_resource_id = "/subscriptions/e6871d0a-eca0-46ac-9e9e-beba5e910746/resourceGroups/scale-set-resources/providers/Microsoft.Compute/virtualMachineScaleSets/france-vmss"
+        metric_resource_id = azurerm_linux_virtual_machine_scale_set.france_vmss.id
         time_grain         = "PT1M"
         statistic          = "Average"
         time_window        = "PT5M"
@@ -298,7 +298,7 @@ resource "azurerm_monitor_autoscale_setting" "france-auto-scale-set" {
     rule {
       metric_trigger {
         metric_name        = "Percentage CPU"
-        metric_resource_id = "/subscriptions/e6871d0a-eca0-46ac-9e9e-beba5e910746/resourceGroups/scale-set-resources/providers/Microsoft.Compute/virtualMachineScaleSets/france-vmss"
+        metric_resource_id = azurerm_linux_virtual_machine_scale_set.france_vmss.id
         time_grain         = "PT1M"
         statistic          = "Average"
         time_window        = "PT5M"
@@ -338,7 +338,7 @@ resource "azurerm_subnet" "internal-india" {
   address_prefixes     = ["10.0.2.0/24"]
 }
 
-resource "azurerm_linux_virtual_machine_scale_set" "india-vmss" {
+resource "azurerm_linux_virtual_machine_scale_set" "india_vmss" {
   name                = "india-vmss"
   resource_group_name = azurerm_resource_group.example.name
   location            = azurerm_virtual_network.india.location
@@ -382,7 +382,7 @@ resource "azurerm_monitor_autoscale_setting" "india-auto-scale-set" {
   name                = "india-auto-scale-set"
   resource_group_name = azurerm_resource_group.example.name
   location            = azurerm_virtual_network.india.location
-  target_resource_id  = "/subscriptions/e6871d0a-eca0-46ac-9e9e-beba5e910746/resourceGroups/scale-set-resources/providers/Microsoft.Compute/virtualMachineScaleSets/india-vmss"
+  target_resource_id  = azurerm_linux_virtual_machine_scale_set.india_vmss.id
 
    profile {
     name = "uphours"
@@ -396,7 +396,7 @@ resource "azurerm_monitor_autoscale_setting" "india-auto-scale-set" {
     rule {
       metric_trigger {
         metric_name        = "Percentage CPU"
-        metric_resource_id = "/subscriptions/e6871d0a-eca0-46ac-9e9e-beba5e910746/resourceGroups/scale-set-resources/providers/Microsoft.Compute/virtualMachineScaleSets/india-vmss"
+        metric_resource_id = azurerm_linux_virtual_machine_scale_set.india_vmss.id
         time_grain         = "PT1M"
         statistic          = "Average"
         time_window        = "PT5M"
@@ -422,7 +422,7 @@ resource "azurerm_monitor_autoscale_setting" "india-auto-scale-set" {
     rule {
       metric_trigger {
         metric_name        = "Percentage CPU"
-        metric_resource_id = "/subscriptions/e6871d0a-eca0-46ac-9e9e-beba5e910746/resourceGroups/scale-set-resources/providers/Microsoft.Compute/virtualMachineScaleSets/uk-vmss"
+        metric_resource_id = azurerm_linux_virtual_machine_scale_set.india_vmss.id
         time_grain         = "PT1M"
         statistic          = "Average"
         time_window        = "PT5M"
@@ -457,7 +457,7 @@ resource "azurerm_monitor_autoscale_setting" "india-auto-scale-set" {
     rule {
       metric_trigger {
         metric_name        = "Percentage CPU"
-        metric_resource_id = "/subscriptions/e6871d0a-eca0-46ac-9e9e-beba5e910746/resourceGroups/scale-set-resources/providers/Microsoft.Compute/virtualMachineScaleSets/uk-vmss"
+        metric_resource_id = azurerm_linux_virtual_machine_scale_set.india_vmss.id
         time_grain         = "PT1M"
         statistic          = "Average"
         time_window        = "PT5M"
